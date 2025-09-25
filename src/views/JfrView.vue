@@ -49,6 +49,16 @@ async function execute() {
     output.value = [{ error: `Fetch error: ${err.message}` }]
     columns.value = [{ field: 'error' }]
   }
+  // update the URL 'query' parameter to reflect the executed statement
+  try {
+    const params = new URLSearchParams(window.location.search)
+    // let URLSearchParams handle percent-encoding for us
+    params.set('query', query.value)
+    const newUrl = window.location.pathname + '?' + params.toString()
+    window.history.replaceState({}, '', newUrl)
+  } catch (e) {
+    // ignore URL errors
+  }
 }
 </script>
 
