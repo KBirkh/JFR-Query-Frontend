@@ -16,13 +16,16 @@ const toast = useToast()
 async function execute() {
   console.log('Execute query in parent:', query.value)
   try {
+    const payload = JSON.stringify({ query: query.value })
+    // debug: log the exact payload we're sending so we can inspect escaping
+    console.debug('POST /query payload:', payload)
     const res = await fetch('http://localhost:8080/query', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Origin: 'http://localhost:5173',
       },
-      body: JSON.stringify({ query: query.value }),
+      body: payload,
     })
 
     if (!res.ok) {
@@ -31,7 +34,11 @@ async function execute() {
       return
     }
 
-    const ct = res.headers.get('content-type') || ''
+  // debug: capture raw response text for easier troubleshooting
+  const rawText = await res.clone().text()
+  console.debug('POST /query raw response text:', rawText)
+
+  const ct = res.headers.get('content-type') || ''
     let data
     if (ct.includes('application/json')) {
       data = await res.json()
