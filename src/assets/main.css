@@ -65,3 +65,109 @@ textarea::placeholder {
     color: rgba(255, 255, 255, 0.6);
   }
 }
+
+/* Generic PrimeVue Toast styling fallback (global) */
+/* Cover multiple possible class name variations used by different PrimeVue versions */
+.p-toast,
+.p-toast-container,
+.p-toast-container-root,
+[class*='p-toast'],
+.toast-root {
+  pointer-events: fill;
+}
+
+.p-toast-message,
+.p-toast-item,
+.p-toast .p-toast-message,
+.p-toast-container .p-toast-item {
+  pointer-events: auto;
+  margin: 0.5rem;
+}
+
+.p-toast .p-toast-message-content,
+.p-toast-message .p-toast-message-content,
+.p-toast-item .p-toast-message-content,
+.p-toast-container .p-toast-message-content,
+.p-toast-container-root .p-toast-message-content {
+  background-color: var(--color-background-soft);
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.p-toast-summary,
+.p-toast-detail {
+  color: inherit;
+}
+
+/* Make sure icons inside toasts (if any) keep spacing */
+.p-toast .p-toast-icon,
+.p-toast .p-toast-message .p-toast-icon,
+.p-toast .p-toast-icon {
+  /* give the icon more room from the left corner and from the text */
+  margin-left: 0.35rem;
+  margin-right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure the message content aligns items center so icons and text are vertically centered */
+.p-toast .p-toast-message .p-toast-message-content,
+.p-toast-message .p-toast-message-content,
+.p-toast-item .p-toast-message-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Keep the summary/detail stacked vertically but let them take remaining width */
+.p-toast .p-toast-message .p-toast-summary,
+.p-toast .p-toast-message .p-toast-detail {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0; /* allow truncation if needed */
+}
+
+/* Move close button a bit away from the text and center it vertically */
+.p-toast .p-toast-message .p-toast-close,
+.p-toast .p-toast-close {
+  margin-left: 0.75rem;
+  align-self: center;
+  padding-left: 0.35rem;
+  padding-right: 0.35rem;
+}
+
+/* If close icon uses a span inside, ensure it doesn't hug the text */
+.p-toast .p-toast-close .p-toast-close-icon,
+.p-toast .p-toast-close .pi {
+  margin-left: 0.35rem;
+}
+
+/* Keep the toast container above other content */
+.p-toast,
+.p-toast-container,
+.p-toast-container-root {
+  z-index: 9999;
+}
+
+/* Severity-specific borders: try several selector patterns used by different versions */
+.p-toast .p-toast-message.p-success,
+.p-toast-message.p-success,
+.p-toast .p-toast-message-success,
+.p-toast-message-success,
+.p-toast-item.p-success {
+  border-radius: 1rem;
+  border-color: color-mix(in srgb, var(--color-success) 60%, rgba(0, 0, 0, 0.06));
+}
+
+.p-toast .p-toast-message.p-error,
+.p-toast-message.p-error,
+.p-toast .p-toast-message-error,
+.p-toast-message-error,
+.p-toast-item.p-error {
+  border-radius: 1rem;
+  border-color: color-mix(in srgb, var(--color-error) 60%, rgba(0, 0, 0, 0.06));
+}

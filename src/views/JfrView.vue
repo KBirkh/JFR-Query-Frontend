@@ -3,12 +3,16 @@ import { ref } from 'vue'
 import Input from '../components/Input.vue'
 import Shell from '../components/Shell.vue'
 import Sidebar from '@/components/Sidebar.vue'
+import { Toast } from 'primevue'
+import { useToast } from 'primevue'
 
 const query = ref('')
 const topHeight = ref(300)
 const output = ref([])
 const columns = ref([])
+const toast = useToast()
 
+// calls to the backend and puts JSON Data into the output and column fields
 async function execute() {
   console.log('Execute query in parent:', query.value)
   try {
@@ -60,11 +64,54 @@ async function execute() {
     // ignore URL errors
   }
 }
+
+// shows a toast depending on the status uf the call to the backend
+// realized in backend by limiting the result size of the Query to 1MB to save time
+async function checkSemantic() {
+  console.log('Check semantics in parent:', query.value)
+  try {
+    const res = await fetch('http://localhost:8080/semanticCheck', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'http://localhost:5173',
+      },
+      body: JSON.stringify({ query: query.value }),
+    })
+
+    if (!res.ok) {
+      console.log('Semantic Check Failed')
+      toast.add({
+        severity: 'error',
+        summary: 'Semantic Check Failed',
+        detail: `Error: ${res.status} ${res.statusText}`,
+        life: 3000,
+      })
+      return
+    } else {
+      console.log('Semantic Check Passed')
+      toast.add({
+        severity: 'success',
+        summary: 'Semantic Check Passed',
+        detail: 'No issues found.',
+        life: 3000,
+      })
+    }
+  } catch (err) {
+    toast.add({
+      severity: 'error',
+      summary: 'Fetching from Backend failed',
+      detail: `Fetch error: ${err.message}`,
+      life: 3000,
+    })
+  }
+}
 </script>
 
 <template>
   <main class="layout">
     <div class="content">
+      <Toast class="toast" />
       <Shell />
       <Input
         v-model="query"
@@ -74,7 +121,9 @@ async function execute() {
         :columns="columns"
       />
     </div>
-    <Sidebar @execute="execute" :button-top="topHeight" />
+    <!-- execute and checkSemantic function calls are emitted from the Sidebar component
+        necessary for access to the textareas in the Input component  -->
+    <Sidebar @execute="execute" :button-top="topHeight" @checkSemantic="checkSemantic" />
   </main>
 </template>
 
@@ -82,12 +131,18 @@ async function execute() {
 .layout {
   display: flex;
   gap: 1rem;
-  align-items: stretch; /* let children stretch to full height */
+  align-items: stretch;
 }
 
 .content {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+}
+
+.toast {
+  background-color: var(--color-background-soft);
+  padding: 1rem;
+  border-radius: 1rem;
 }
 </style>

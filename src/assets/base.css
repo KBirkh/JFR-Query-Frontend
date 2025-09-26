@@ -34,6 +34,9 @@
   --color-text: var(--vt-c-text-light-1);
 
   --section-gap: 160px;
+  /* semantic success/error colors */
+  --color-success: hsl(160, 100%, 37%); /* matches .execute-btn */
+  --color-error: hsl(6, 77%, 52%); /* modern muted red */
 }
 
 @media (prefers-color-scheme: dark) {

@@ -1,6 +1,6 @@
 <script setup>
 import { defineEmits, defineProps } from 'vue'
-const emit = defineEmits(['execute'])
+const emit = defineEmits(['execute', 'checkSemantic'])
 const props = defineProps({
   buttonTop: {
     type: Number,
@@ -10,6 +10,9 @@ const props = defineProps({
 
 function handleExecuteQuery() {
   emit('execute')
+}
+function handleSemanticCheck() {
+  emit('checkSemantic')
 }
 </script>
 
@@ -21,6 +24,7 @@ function handleExecuteQuery() {
     <div class="sidebar-body">
       <p>This is a sidebar component.</p>
       <button class="execute-btn" @click="handleExecuteQuery" type="button">Execute query</button>
+      <button class="check-btn" @click="handleSemanticCheck" type="button">Check semantics</button>
     </div>
   </div>
 </template>
@@ -81,6 +85,29 @@ function handleExecuteQuery() {
 
 .execute-btn:focus {
   outline: 3px solid rgba(60, 180, 120, 0.18);
+  outline-offset: 2px;
+}
+
+.check-btn {
+  background: hsl(220, 100%, 37%);
+  color: white;
+  border: 0;
+  padding: 0.75rem 1rem; /* larger button */
+  border-radius: 0.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 220px;
+  margin-top: 1rem;
+}
+
+.check-btn:hover {
+  filter: brightness(0.95);
+}
+
+.check-btn:focus {
+  outline: 3px solid rgba(60, 120, 180, 0.18);
   outline-offset: 2px;
 }
 </style>
